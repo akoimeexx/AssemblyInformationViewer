@@ -2,6 +2,9 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/AssemblyInfo/bin/Debug
-/AssemblyInfo/obj/Debug
-/UnitTests.AssemblyInformation/obj/Debug
+/AssemblyInfo/bin
+/AssemblyInfo/obj
+/UnitTests.AssemblyInformation/bin
+/UnitTests.AssemblyInformation/obj
+/TestResults
+/.vs
