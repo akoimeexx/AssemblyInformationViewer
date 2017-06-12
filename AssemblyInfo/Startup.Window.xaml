@@ -1,0 +1,421 @@
+﻿<Window x:Class="com.akoimeexx.utilities.assemblyinformation.Startup" 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:local="clr-namespace:com.akoimeexx.utilities.assemblyinformation" 
+    
+    mc:Ignorable="d" 
+
+    Height="292" 
+    Icon="AssemblyInfo.MultiRes.ico" 
+    MinHeight="240" 
+    MinWidth="360" 
+    ResizeMode="CanResizeWithGrip" 
+    Title="Assembly Info Viewer" 
+    Width="640" 
+>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="18" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Menu>
+            <MenuItem Header="_File">
+                <MenuItem Header="_New Comparison" 
+                    InputGestureText="Ctrl+N" 
+                    IsEnabled="False" 
+                />
+                <MenuItem Header="_Open Comparison..." 
+                    InputGestureText="Ctrl+O" 
+                    IsEnabled="False" 
+                />
+                <Separator />
+                <MenuItem Header="Save" 
+                    InputGestureText="Ctrl+S" 
+                    IsEnabled="False" 
+                />
+                <MenuItem Header="Save Comparison As..." 
+                    IsEnabled="False" 
+                />
+                <Separator />
+                <MenuItem Header="Export..." 
+                    Command="{Binding 
+                        Path=ExportJson, 
+                        Mode=OneWay
+                    }"
+                />
+                <Separator />
+                <MenuItem Header="E_xit" 
+                    Command="{Binding 
+                        Path=ExitApplication, 
+                        Mode=OneWay 
+                    }"
+                    InputGestureText="Alt+F4" 
+                />
+            </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Header="_About..." 
+                    Command="{Binding 
+                        Path=AboutDialog, 
+                        Mode=OneTime
+                    }"
+                />
+            </MenuItem>
+        </Menu>
+        <ToolBarTray Grid.Row="1" 
+            Background="{StaticResource 
+                {x:Static SystemColors.MenuBarBrushKey}
+            }" 
+        >
+            <ToolBar 
+                Background="{StaticResource 
+                    {x:Static SystemColors.MenuBarBrushKey}
+                }" 
+                Header="" 
+            >
+                <Button ToolBar.OverflowMode="Never" 
+                    Command="{Binding 
+                        Path=AddAssemblyGroup, 
+                        Mode=OneWay
+                    }" 
+                    ToolTip="Add Assembly Group" 
+                >
+                    <Image Source="Images/Add.Icon.png" />
+                </Button>
+                <Button ToolBar.OverflowMode="Never" 
+                    Command="{Binding 
+                        Path=RemoveAssemblyGroup, 
+                        Mode=OneWay
+                    }"
+                    ToolTip="Remove Assembly Group" 
+                >
+                    <Image Source="Images/Remove.Icon.png" />
+                </Button>
+            </ToolBar>
+            <ToolBar 
+                Background="{StaticResource 
+                    {x:Static SystemColors.MenuBarBrushKey}
+                }" 
+                Header="Export Utilities" 
+            >
+                <Button ToolBar.OverflowMode="AsNeeded" 
+                    Command="{Binding 
+                        Path=ExportJson, 
+                        Mode=OneWay
+                    }"
+                >
+                    <TextBlock Text="Export to Json" />
+                    <!--<Image Source="{x:Null}" />-->
+                </Button>
+                <Separator />
+                <Button ToolBar.OverflowMode="AsNeeded" 
+                    IsEnabled="False" 
+                    ToolTip="Generates a diff file in the current directory and optionally attempts to launch a diff viewing program to read it" 
+                >
+                    <TextBlock Text="Generate Diff" />
+                    <!--<Image Source="{x:Null}" />-->
+                </Button>
+            </ToolBar>
+            <ToolBar
+                Background="{StaticResource 
+                    {x:Static SystemColors.MenuBarBrushKey}
+                }" 
+                Header="Assembly Behavior" 
+                IsEnabled="False" 
+            >
+                <ToggleButton ToolBar.OverflowMode="AsNeeded" 
+                    IsChecked="{Binding 
+                        Path=IsSelectionMatchingEnabled, 
+                        Mode=TwoWay
+                    }" 
+                    ToolTip="Selection Matching" 
+                >
+                    <Image Source="Images/SelectionMatching.Icon.png" />
+                </ToggleButton>
+                <ToggleButton ToolBar.OverflowMode="AsNeeded" 
+                    IsChecked="{Binding 
+                        Path=IsHighlightingEnabled, 
+                        Mode=TwoWay
+                    }" 
+                    ToolTip="Highlight Differences" 
+                >
+                    <Image Source="Images/Highlighting.Icon.png" />
+                </ToggleButton>
+            </ToolBar>
+        </ToolBarTray>
+        <ScrollViewer Grid.Row="2" 
+            HorizontalScrollBarVisibility="Visible" 
+            Margin="0" 
+            VerticalScrollBarVisibility="Hidden" 
+        >
+            <ItemsControl 
+                ItemsSource="{Binding 
+                    Path=AssemblyGroups, 
+                    FallbackValue={x:Null}
+                }" 
+                MaxHeight="{Binding 
+                    Path=ViewportHeight, 
+                    Mode=OneWay, 
+                    RelativeSource={
+                        RelativeSource FindAncestor, 
+                        AncestorType=ScrollViewer
+                    }
+                }" 
+            >
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid 
+                            Margin="5,10" 
+                            Rows="1" 
+                        />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+        <DockPanel 
+            Margin="5,0" 
+            MinWidth="192" 
+        >
+            <DockPanel DockPanel.Dock="Top">
+                <Button 
+                    Command="{Binding 
+                        Path=OpenAssemblyGroup, 
+                        Mode=OneWay
+                    }" 
+                    HorizontalAlignment="Left" 
+                    Width="38"
+                >
+                    <Image 
+                        Source="Images/Folder.Icon.png" 
+                        Height="16" 
+                        Width="16" 
+                    />
+                </Button>
+                <TextBox 
+                    IsReadOnly="True" 
+                    Margin="10,0,0,0" 
+                    Text="{Binding 
+                        Path=AssemblyPath.FullName, 
+                        Mode=OneWay, 
+                        FallbackValue={}
+                    }" 
+                    VerticalContentAlignment="Center" 
+                />
+            </DockPanel>
+            <!--Drop="FilePath_Drop"-->
+            <DataGrid x:Name="assemblyList" DockPanel.Dock="Bottom" 
+                AllowDrop="True" 
+                AlternatingRowBackground="{StaticResource 
+                    {x:Static SystemColors.ControlBrushKey}
+                }"
+                AutoGenerateColumns="False" 
+                Background="{StaticResource 
+                    {x:Static SystemColors.WindowBrushKey}
+                }"
+                HorizontalGridLinesBrush="{StaticResource 
+                    {x:Static SystemColors.ControlDarkBrushKey}
+                }" 
+                IsReadOnly="True" 
+                ItemsSource="{Binding 
+                    Path=Assemblies, 
+                    Mode=OneWay
+                }"
+                Margin="0,10,0,0" 
+                VerticalScrollBarVisibility="Visible" 
+                SelectionMode="Single" 
+                SelectionUnit="FullRow" 
+                Tag="{Binding 
+                    Path=AssemblyFilterInput, 
+                    Mode=TwoWay
+                }" 
+                VerticalGridLinesBrush="Transparent" 
+            >
+                <DataGrid.Resources>
+                    <Style TargetType="{x:Type DataGridColumnHeader}">
+                        <Setter Property="HorizontalContentAlignment" 
+                            Value="Stretch" 
+                        />
+                    </Style>
+                </DataGrid.Resources>
+                <DataGrid.InputBindings>
+                    <MouseBinding MouseAction="LeftDoubleClick" 
+                        Command="{Binding 
+                            Path=DetailsDialog, 
+                            Mode=OneWay
+                        }" 
+                        CommandParameter="{Binding 
+                            Path=SelectedItem, 
+                            ElementName=assemblyList, 
+                            Mode=OneWay
+                        }" 
+                    />
+                </DataGrid.InputBindings>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Assembly" 
+                        Binding="{Binding Name}" 
+                        Width="Auto" 
+                    >
+                        <DataGridTextColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <DockPanel 
+                                    HorizontalAlignment="Stretch" 
+                                    LastChildFill="True" 
+                                    Width="Auto" 
+                                >
+                                    <TextBlock DockPanel.Dock="Left" 
+                                        Text="{Binding 
+                                            Content, 
+                                            RelativeSource={RelativeSource 
+                                                Mode=TemplatedParent
+                                            }
+                                        }"
+                                    />
+                                    <TextBox 
+                                        FontStyle="Italic" 
+                                        Foreground="{StaticResource 
+                                            {x:Static SystemColors.MenuHighlightBrushKey} 
+                                        }" 
+                                        Margin="5,0,0,0" 
+                                        MinWidth="72" 
+                                        Text="{Binding 
+                                            Path=Tag, 
+                                            Mode=TwoWay, 
+                                            ElementName=assemblyList, 
+                                            UpdateSourceTrigger=PropertyChanged
+                                        }"
+                                        ToolTip="Filter Assembly Information" 
+                                    />
+                                </DockPanel>
+                            </DataTemplate>
+                        </DataGridTextColumn.HeaderTemplate>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Version" 
+                        Binding="{Binding Version}" 
+                        Width="Auto" 
+                    />
+                </DataGrid.Columns>
+                <DataGrid.GroupStyle>
+                    <GroupStyle>
+                        <GroupStyle.ContainerStyle>
+                            <Style TargetType="{x:Type GroupItem}">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type GroupItem}">
+                                            <Expander IsExpanded="True">
+                                                <Expander.Header>
+                                                    <TextBlock 
+                                                        Foreground="{StaticResource 
+                                                            {x:Static 
+                                                                SystemColors.ControlDarkDarkBrushKey
+                                                            }
+                                                        }" 
+                                                        Text="{Binding 
+                                                            Path=Name, 
+                                                            Mode=OneWay
+                                                        }" 
+                                                    />
+                                                </Expander.Header>
+                                                <Expander.Content>
+                                                    <ItemsPresenter />
+                                                </Expander.Content>
+                                            </Expander>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </GroupStyle.ContainerStyle>
+                    </GroupStyle>
+                </DataGrid.GroupStyle>
+
+
+
+            </DataGrid>
+        </DockPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+        <StatusBar Grid.Row="3"
+            MinHeight="18" 
+        >
+            <StatusBarItem>
+                <Grid 
+                    Height="16"
+                    Width="Auto" 
+                >
+                    <Grid.ToolTip>
+                        <ToolTip 
+                            Content="{Binding 
+                                Path=AssemblyGroups.Count, 
+                                Mode=OneWay
+                            }"
+                            ContentStringFormat="{}Active Comparison Panes: {0}"
+                        />
+                    </Grid.ToolTip>
+                    <Image 
+                        HorizontalAlignment="Left" 
+                        Margin="0" 
+                        Source="Images/PaneCounter.Background.png" 
+                    />
+                    <Border 
+                        Background="#f00" 
+                        BorderBrush="#800" 
+                        BorderThickness="1" 
+                        CornerRadius="4" 
+                        Height="Auto" 
+                        HorizontalAlignment="Right" 
+                        Margin="6,0,0,0" 
+                        VerticalAlignment="Top" 
+                        Width="Auto" 
+                    >
+                        <TextBlock 
+                            FontSize="8" 
+                            FontWeight="Bold" 
+                            Foreground="#fff" 
+                            Margin="0" 
+                            Padding="1,0" 
+                            Text="{Binding 
+                                Path=AssemblyGroups.Count, 
+                                Mode=OneWay, 
+                                FallbackValue=?
+                            }" 
+                        />
+                    </Border>
+                </Grid>
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock 
+                    Text="{Binding 
+                        Messages.Top, 
+                        Mode=OneWay, 
+                        NotifyOnTargetUpdated=True
+                    }" 
+                >
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Style.Triggers>
+                                <EventTrigger RoutedEvent="Binding.TargetUpdated">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimationUsingKeyFrames 
+                                                Storyboard.TargetProperty="Opacity" 
+                                            >
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0" />
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.25" Value="1" />
+                                                <EasingDoubleKeyFrame KeyTime="0:0:2.25" Value="1" />
+                                                <EasingDoubleKeyFrame KeyTime="0:0:7.5" Value="0" />
+                                            </DoubleAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>

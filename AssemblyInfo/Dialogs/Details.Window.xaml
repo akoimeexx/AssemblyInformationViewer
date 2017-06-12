@@ -1,0 +1,139 @@
+﻿<Window x:Class="com.akoimeexx.utilities.assemblyinformation.Dialogs.Details" 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:local="clr-namespace:com.akoimeexx.utilities.assemblyinformation.Dialogs" 
+    
+    mc:Ignorable="d" 
+
+    Height="480" 
+    Icon="/AssemblyInformation;component/AssemblyInfo.MultiRes.ico" 
+    ResizeMode="CanResizeWithGrip" 
+    ShowInTaskbar="False" 
+    Title="Assembly Details" 
+    Width="320" 
+    WindowStyle="ToolWindow" 
+>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Row="1">
+            <DockPanel DockPanel.Dock="Top"
+                Margin="10,10,10,5" 
+            >
+                <Label Content="Full Name" />
+                <TextBox 
+                    IsReadOnly="True" 
+                    Text="{Binding 
+                        Path=AssemblyDetails.FullName, 
+                        Mode=OneWay
+                    }" 
+                    VerticalContentAlignment="Center" 
+                />
+            </DockPanel>
+            <DockPanel DockPanel.Dock="Top" 
+                Margin="10,5" 
+            >
+                <Label Content="Image Runtime Version" />
+                <TextBox 
+                    IsReadOnly="True" 
+                    Text="{Binding 
+                        Path=AssemblyDetails.ImageRuntimeVersion, 
+                        Mode=OneWay
+                    }" 
+                    VerticalContentAlignment="Center" 
+                />
+            </DockPanel>
+            <DockPanel DockPanel.Dock="Top"
+                Margin="10,5" 
+            >
+                <Label Content="Location" />
+                <TextBox 
+                    IsReadOnly="True" 
+                    Text="{Binding 
+                        Path=AssemblyDetails.Location, 
+                        Mode=OneWay
+                    }" 
+                    VerticalContentAlignment="Center" 
+                />
+            </DockPanel>
+            <DataGrid DockPanel.Dock="Bottom" 
+                AlternatingRowBackground="{StaticResource 
+                    {x:Static SystemColors.ControlBrushKey}
+                }"
+                AutoGenerateColumns="False" 
+                Background="{StaticResource 
+                    {x:Static SystemColors.WindowBrushKey}
+                }"
+                HorizontalGridLinesBrush="{StaticResource 
+                    {x:Static SystemColors.ControlDarkBrushKey}
+                }" 
+                IsReadOnly="True" 
+                ItemsSource="{Binding 
+                    Path=AssemblyDetails.ExportedTypes
+                }"
+                Margin="10,5,10,0" 
+                VerticalScrollBarVisibility="Visible" 
+                SelectionMode="Single" 
+                SelectionUnit="FullRow" 
+                VerticalGridLinesBrush="Transparent" 
+            >
+                <DataGrid.Resources>
+                    <Style TargetType="{x:Type DataGridColumnHeader}">
+                        <Setter Property="HorizontalContentAlignment" 
+                            Value="Stretch" 
+                        />
+                    </Style>
+                </DataGrid.Resources>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Class Name" 
+                        Binding="{Binding 
+                            Path=Key, 
+                            Mode=OneWay
+                        }" 
+                        Width="Auto" 
+                    />
+                    <DataGridTemplateColumn Header="Public Methods" 
+                        Width="*" 
+                    >
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox
+                                    ItemsSource="{Binding 
+                                        Path=Value, 
+                                        Mode=OneWay
+                                    }" 
+                                />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
+
+
+        <Button Grid.Row="2" 
+            Command="{Binding 
+                Path=CloseWindow, 
+                Mode=OneWay
+            }"
+            CommandParameter="{Binding 
+                Path=., 
+                Mode=TwoWay, 
+                RelativeSource={RelativeSource 
+                    FindAncestor, 
+                    AncestorType=Window
+                }
+            }"
+            Content="_OK" 
+            HorizontalAlignment="Center"
+            IsDefault="True" 
+            Margin="0,10" 
+            Padding="32,0"
+        />
+    </Grid>
+</Window>
