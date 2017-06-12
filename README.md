@@ -4,7 +4,7 @@
 
 .Net Application to assist in finding discrepancies in assembly versions. 
 Written in C# & .Net 4.6.2, using Visual Studio 2015. 
-[Licensed](https://github.com/akoimeexx/) under 
+[Licensed](https://github.com/akoimeexx/AssemblyInformationViewer/blob/master/AssemblyInfo/LICENSE.BSD3) under 
 [BSD-3](https://opensource.org/licenses/BSD-3-Clause).
 
 ### Unit Tests
@@ -24,7 +24,7 @@ Initial testing shows this does not work with binaries compiled outside of a
 
 ### Nifty Bits
 
-* **_[ReflectionAnalyzer.Class.cs]()_:**  
+* **_[ReflectionAnalyzer.Class.cs](https://github.com/akoimeexx/AssemblyInformationViewer/blob/master/AssemblyInfo/ReflectionAnalyzer.Class.cs)_:**  
   provides access to information inside .Net 
 libraries via &mdash;you guessed it&mdash; Reflection. It does this in a 
 separate `AppDomain`, which allows the program to view information on multiple 
