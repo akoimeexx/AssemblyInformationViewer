@@ -3,8 +3,8 @@
     using System.Diagnostics;
     
     public static partial class UriExtensions {
-        public static void OpenExternal(this Uri u) {
-            Process.Start(new ProcessStartInfo(u.AbsoluteUri));
+        public static Process OpenExternal(this Uri u) {
+            return Process.Start(new ProcessStartInfo(u.AbsoluteUri));
         }
     }
 }

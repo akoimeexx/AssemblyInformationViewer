@@ -13,7 +13,7 @@ namespace com.akoimeexx.utilities.assemblyinformation.ViewModels {
         public Uri GithubLink {
             get { return _githubLink; }
             private set { Set(ref _githubLink, value); }
-        } private Uri _githubLink = new Uri("https://github.com/akoimeexx");
+        } private Uri _githubLink = new Uri("https://github.com/akoimeexx/AssemblyInformationViewer");
         public string Version {
             get {
                 return _version ?? (
