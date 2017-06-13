@@ -4,7 +4,7 @@
 
 .Net Application to assist in finding discrepancies in assembly versions. 
 Written in C# & .Net 4.6.2, using Visual Studio 2015. 
-[Licensed](https://github.com/akoimeexx/AssemblyInformationViewer/blob/master/LICENSE.BSD3) under 
+[Licensed](https://github.com/akoimeexx/AssemblyInformationViewer/blob/master/LICENSE) under 
 [BSD-3](https://opensource.org/licenses/BSD-3-Clause).
 
 ### Unit Tests
