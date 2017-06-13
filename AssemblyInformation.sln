@@ -7,6 +7,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssemblyInformation", "Asse
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests.AssemblyInformation", "UnitTests.AssemblyInformation\UnitTests.AssemblyInformation.csproj", "{F08BC62C-6933-4AB1-8F5C-67E479AA470D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Screenshots", "Screenshots", "{14806266-EF59-4895-8B89-EBB3C986E761}"
+	ProjectSection(SolutionItems) = preProject
+		Screenshots\DetailsView.png = Screenshots\DetailsView.png
+		Screenshots\MainScreenTurnOn.png = Screenshots\MainScreenTurnOn.png
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
