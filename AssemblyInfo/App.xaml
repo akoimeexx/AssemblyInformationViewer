@@ -6,6 +6,12 @@
     StartupUri="Startup.Window.xaml" 
 >
     <Application.Resources>
-         
+        <Style TargetType="Image">
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.25" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Application.Resources>
 </Application>

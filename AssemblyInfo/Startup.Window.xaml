@@ -12,6 +12,7 @@
     MinHeight="240" 
     MinWidth="360" 
     ResizeMode="CanResizeWithGrip" 
+    SizeToContent="Width" 
     Title="Assembly Info Viewer" 
     Width="640" 
 >
@@ -36,7 +37,11 @@
                 <MenuItem Header="Save" 
                     InputGestureText="Ctrl+S" 
                     IsEnabled="False" 
-                />
+                >
+                    <MenuItem.Icon>
+                        <Image Source="Images/SaveAs.Icon.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
                 <MenuItem Header="Save Comparison As..." 
                     IsEnabled="False" 
                 />
@@ -46,7 +51,11 @@
                         Path=ExportJson, 
                         Mode=OneWay
                     }"
-                />
+                >
+                    <MenuItem.Icon>
+                        <Image Source="Images/Export.Icon.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
                 <Separator />
                 <MenuItem Header="E_xit" 
                     Command="{Binding 
@@ -54,7 +63,11 @@
                         Mode=OneWay 
                     }"
                     InputGestureText="Alt+F4" 
-                />
+                >
+                    <MenuItem.Icon>
+                        <Image Source="Images/Close.Icon.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="_Help">
                 <MenuItem Header="_About..." 
@@ -62,7 +75,11 @@
                         Path=AboutDialog, 
                         Mode=OneTime
                     }"
-                />
+                >
+                    <MenuItem.Icon>
+                        <Image Source="Images/Help.Icon.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
         </Menu>
         <ToolBarTray Grid.Row="1" 
@@ -141,7 +158,6 @@
                         Path=IsHighlightingEnabled, 
                         Mode=TwoWay
                     }" 
-                    IsEnabled="False" 
                     ToolTip="Highlight Differences" 
                 >
                     <Image Source="Images/Highlighting.Icon.png" />

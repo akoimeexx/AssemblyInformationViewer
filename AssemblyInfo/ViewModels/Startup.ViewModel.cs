@@ -79,6 +79,26 @@ namespace com.akoimeexx.utilities.assemblyinformation.ViewModels {
             }
             set { Set(ref _addAssemblyGroup, value); }
         } private ICommand _addAssemblyGroup = default(ICommand);
+        public ICommand DiscrepancyHighlighting {
+            get {
+                return 
+                    _discrepancyHighlighting ?? 
+                    (_discrepancyHighlighting = new CommandBase(
+                        p => {
+                            return IsHighlightingEnabled;
+                        }, 
+                        a => {
+                            System.Windows.MessageBox.Show(
+                                "Discrepancy highlighting not implemented", 
+                                "", 
+                                System.Windows.MessageBoxButton.OK, 
+                                System.Windows.MessageBoxImage.Exclamation
+                            );
+                        }
+                    ));
+            }
+            set { Set(ref _discrepancyHighlighting, value); }
+        } private ICommand _discrepancyHighlighting = default(ICommand);
         public ICommand ExitApplication {
             get {
                 return
@@ -159,7 +179,22 @@ namespace com.akoimeexx.utilities.assemblyinformation.ViewModels {
                             );
                         },
                         a => {
-                            throw new NotImplementedException();
+                            foreach (var group in AssemblyGroups) {
+                                foreach (var asm in group.Assemblies) {
+                                    if (
+                                        ((Models.AssemblyInfo)asm).Name == ((Models.AssemblyInfo)a).Name
+                                    ) {
+                                        System.Windows.MessageBox.Show(
+                                            "Selection matching not implemented", 
+                                            "", 
+                                            System.Windows.MessageBoxButton.OK, 
+                                            System.Windows.MessageBoxImage.Exclamation
+                                        );
+                                        //((CollectionView)asm).
+                                        break;
+                                    }
+                                }
+                            }
                         }
                     ));
             }

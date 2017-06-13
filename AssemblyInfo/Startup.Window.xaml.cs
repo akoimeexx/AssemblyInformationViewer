@@ -39,9 +39,22 @@ namespace com.akoimeexx.utilities.assemblyinformation {
 #endregion Events
     }
     public partial class Startup {
+#region Methods
+        private void disableAutoresize(object o, EventArgs e) {
+            SizeToContent = SizeToContent.Manual;
+            ContentRendered -= disableAutoresize;
+        }
+#endregion Methods
+    }
+    public partial class Startup {
+#region Constructors & Destructor
         public Startup() {
             InitializeComponent();
             DataContext = ViewModel;
+
+            // Resize to content, then disable auto-resizing
+            ContentRendered += disableAutoresize;
         }
+#endregion Constructors & Destructor
     }
 }
