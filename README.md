@@ -17,10 +17,13 @@ time this software should be considered to be in very early alpha stages.
 Initial testing shows this does not work with binaries compiled outside of a 
 .Net environment. Currently, there are no plans to change this.
 
-
-
 ### Screenshots
-*TODO: MOAR GFX*
+
+##### Main Screen (Turn On)
+![Startup.Window.Xaml](https://raw.githubusercontent.com/akoimeexx/AssemblyInformationViewer/master/Screenshots/MainScreenTurnOn.png)
+
+##### Assembly Details
+![Details.Window.Xaml](https://raw.githubusercontent.com/akoimeexx/AssemblyInformationViewer/master/Screenshots/DetailsView.png)
 
 ### Nifty Bits
 
