@@ -132,15 +132,34 @@ namespace com.akoimeexx.utilities.assemblyinformation.ViewModels {
             }
             set { Set(ref _exportJson, value); }
         } private ICommand _exportJson = default(ICommand);
+        public ICommand GenerateDiff {
+            get {
+                return _generateDiff ?? 
+                    (_generateDiff = new CommandBase(
+                        p => { return AssemblyGroups.Count == 2; }, 
+                        a => {
+                            Console.WriteLine(
+                                AssemblyGroups[0].ToJson().ToDiff(
+                                    AssemblyGroups[1].ToJson()
+                                )
+                            );
+                        }
+                    ));
+            }
+            set { Set(ref _generateDiff, value); }
+        } private ICommand _generateDiff = default(ICommand);
         public ICommand MatchSelection {
             get { return 
                     _matchSelection ?? 
                     (_matchSelection = new CommandBase(
                         p => {
-                            return IsSelectionMatchingEnabled;
+                            return (
+                                p.GetType() == typeof(Models.AssemblyInfo) && 
+                                IsSelectionMatchingEnabled
+                            );
                         },
                         a => {
-
+                            throw new NotImplementedException();
                         }
                     ));
             }

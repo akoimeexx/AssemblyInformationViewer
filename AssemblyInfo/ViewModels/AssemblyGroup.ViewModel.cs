@@ -16,7 +16,7 @@ namespace com.akoimeexx.utilities.assemblyinformation.ViewModels {
 
     public partial class AssemblyGroupViewModel : Notifiable {
 #region Properties
-        //https://code.msdn.microsoft.com/windowsdesktop/CollectionView-Tips-MVVM-d6ebb4a7
+        //See https://code.msdn.microsoft.com/windowsdesktop/CollectionView-Tips-MVVM-d6ebb4a7 for references on handling CollectionViews
         public ICollectionView Assemblies {
             get { return _assemblies; }
             set {
@@ -179,12 +179,7 @@ namespace com.akoimeexx.utilities.assemblyinformation.ViewModels {
                 Assemblies.GroupDescriptions.Add(
                     new PropertyGroupDescription("Path")
                 );
-            } catch (Exception e) {
-                //e.Data.Add(
-                //    "Path:", AssemblyPath.FullName
-                //);
-                //Assemblies = CollectionViewSource.GetDefaultView(e);
-            }
+            } catch (Exception e) { }
         }
         public string ToJson() {
             string s = default(string);

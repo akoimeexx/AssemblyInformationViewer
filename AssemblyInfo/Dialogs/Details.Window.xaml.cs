@@ -14,8 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace com.akoimeexx.utilities.assemblyinformation.Dialogs
-{
+namespace com.akoimeexx.utilities.assemblyinformation.Dialogs {
     /// <summary>
     /// Interaction logic for Details.xaml
     /// </summary>

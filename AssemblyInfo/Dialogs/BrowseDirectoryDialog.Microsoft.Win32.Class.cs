@@ -10,7 +10,6 @@
             get {
                 int i = (int)(
                     PInvoke.BrowseStyles.NewDialogStyle 
-                    //PInvoke.BrowseStyles.RestrictToFileSystem
                 );
                 if (!ShowNewFolderButton)
                     i |= (int)PInvoke.BrowseStyles.HideNewFolderButton;
@@ -19,12 +18,6 @@
                 if (ValidateSelection)
                     i |= (int)PInvoke.BrowseStyles.ValidateSelection;
                 return i;
-                //(int)(
-                //    PInvoke.BrowseStyles.NewDialogStyle |
-                //    PInvoke.BrowseStyles.HideNewFolderButton |
-                //    PInvoke.BrowseStyles.RestrictToFileSystem |
-                //    PInvoke.BrowseStyles.RestrictToDomain
-                //)
             }
         }
         public DirectoryInfo InitialDirectory {
