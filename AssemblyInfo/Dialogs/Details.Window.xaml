@@ -3,7 +3,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-    xmlns:local="clr-namespace:com.akoimeexx.utilities.assemblyinformation.Dialogs" 
+    xmlns:local="clr-namespace:com.akoimeexx.utilities.assemblyinformation" 
+    xmlns:system="clr-namespace:System;assembly=mscorlib" 
+    xmlns:collections="clr-namespace:System.Collections.Generic;assembly=mscorlib" 
     
     mc:Ignorable="d" 
 
@@ -12,9 +14,13 @@
     ResizeMode="CanResizeWithGrip" 
     ShowInTaskbar="False" 
     Title="Assembly Details" 
+    Topmost="True" 
     Width="320" 
     WindowStyle="ToolWindow" 
 >
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibility" />
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -61,64 +67,234 @@
                     VerticalContentAlignment="Center" 
                 />
             </DockPanel>
-            <DataGrid DockPanel.Dock="Bottom" 
-                AlternatingRowBackground="{StaticResource 
-                    {x:Static SystemColors.ControlBrushKey}
-                }"
-                AutoGenerateColumns="False" 
-                Background="{StaticResource 
-                    {x:Static SystemColors.WindowBrushKey}
-                }"
-                HorizontalGridLinesBrush="{StaticResource 
-                    {x:Static SystemColors.ControlDarkBrushKey}
-                }" 
-                IsReadOnly="True" 
+            <TreeView 
                 ItemsSource="{Binding 
-                    Path=AssemblyDetails.ExportedTypes
-                }"
-                Margin="10,5,10,0" 
-                VerticalScrollBarVisibility="Visible" 
-                SelectionMode="Single" 
-                SelectionUnit="FullRow" 
-                VerticalGridLinesBrush="Transparent" 
+                    Path=InformationCollection, 
+                    Mode=OneWay 
+                }" 
+                Margin="10" 
             >
-                <DataGrid.Resources>
-                    <Style TargetType="{x:Type DataGridColumnHeader}">
-                        <Setter Property="HorizontalContentAlignment" 
-                            Value="Stretch" 
+                <TreeView.Resources>
+                    <DataTemplate 
+                        DataType="{x:Type local:ObjectAnalysis}" 
+                    >
+                        <TreeViewItem 
+                            Header="{Binding 
+                                Path=Name, 
+                                Mode=OneWay 
+                            }" 
+                        >
+                            <TreeViewItem 
+                                Header="Ancestors"
+                                ItemsSource="{Binding 
+                                    Path=Ancestors, 
+                                    Mode=OneWay
+                                }"
+                            >
+                                <TreeViewItem.ItemTemplate>
+                                    <DataTemplate>
+                                        <TreeViewItem 
+                                            Header="{Binding 
+                                                Path=Key, 
+                                                Mode=OneWay
+                                            }"
+                                            ItemsSource="{Binding 
+                                                Path=Value, 
+                                                Mode=OneWay
+                                            }"
+                                        />
+                                    </DataTemplate>
+                                </TreeViewItem.ItemTemplate>
+                            </TreeViewItem>
+                            <TreeViewItem 
+                                Header="Events" 
+                                ItemsSource="{Binding 
+                                    Path=Events, 
+                                    Mode=OneWay
+                                }"
+                            />
+                            <TreeViewItem 
+                                Header="Methods" 
+                                ItemsSource="{Binding 
+                                    Path=Methods, 
+                                    Mode=OneWay
+                                }"
+                            />
+                            <TreeViewItem 
+                                Header="Properties" 
+                                ItemsSource="{Binding 
+                                    Path=Properties, 
+                                    Mode=OneWay
+                                }"
+                            />
+                        </TreeViewItem>
+                    </DataTemplate>
+                    <DataTemplate 
+                        DataType="{x:Type local:InstanceAnalysis}" 
+                    >
+                        <TreeViewItem 
+                            Header="{Binding 
+                                Path=Name, 
+                                Mode=OneWay 
+                            }" 
+                        >
+                            <TreeViewItem 
+                                Header="Ancestors"
+                                ItemsSource="{Binding 
+                                    Path=Ancestors, 
+                                    Mode=OneWay
+                                }"
+                            >
+                                <TreeViewItem.ItemTemplate>
+                                    <DataTemplate>
+                                        <TreeViewItem 
+                                            Header="{Binding 
+                                                Path=Key, 
+                                                Mode=OneWay
+                                            }"
+                                            ItemsSource="{Binding 
+                                                Path=Value, 
+                                                Mode=OneWay
+                                            }"
+                                        />
+                                    </DataTemplate>
+                                </TreeViewItem.ItemTemplate>
+                            </TreeViewItem>
+                            <TreeViewItem 
+                                Header="Constructors"
+                                ItemsSource="{Binding 
+                                    Path=Constructors, 
+                                    Mode=OneWay
+                                }"
+                            />
+                            <TreeViewItem 
+                                Header="Events" 
+                                ItemsSource="{Binding 
+                                    Path=Events, 
+                                    Mode=OneWay
+                                }"
+                            />
+                            <TreeViewItem 
+                                Header="Methods" 
+                                ItemsSource="{Binding 
+                                    Path=Methods, 
+                                    Mode=OneWay
+                                }"
+                            />
+                            <TreeViewItem 
+                                Header="Properties" 
+                                ItemsSource="{Binding 
+                                    Path=Properties, 
+                                    Mode=OneWay
+                                }"
+                            />
+                        </TreeViewItem>
+                    </DataTemplate>
+                    <DataTemplate 
+                        DataType="{x:Type local:EnumAnalysis}" 
+                    >
+                        <TreeViewItem 
+                            Header="{Binding 
+                                Path=Name, 
+                                Mode=OneWay 
+                            }" 
+                            ItemsSource="{Binding 
+                                Path=Values, 
+                                Mode=OneWay
+                            }" 
                         />
-                    </Style>
-                </DataGrid.Resources>
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Class Name" 
-                        Binding="{Binding 
-                            Path=Key, 
-                            Mode=OneWay
-                        }" 
-                        Width="Auto" 
+                    </DataTemplate>
+                    <DataTemplate 
+                        DataType="{x:Type local:ClassAnalysis}" 
                     >
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="VerticalAlignment" Value="Center" />
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-                    <DataGridTemplateColumn Header="Public Methods" 
-                        Width="*" 
-                    >
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <ComboBox
-                                    ItemsSource="{Binding 
-                                        Path=Value, 
-                                        Mode=OneWay
-                                    }" 
-                                />
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                </DataGrid.Columns>
-            </DataGrid>
+                        <TreeViewItem>
+                            <TreeViewItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock 
+                                        Text="{Binding 
+                                            Path=Name, 
+                                            Mode=OneWay 
+                                        }" 
+                                        VerticalAlignment="Center" 
+                                    />
+                                    <Image 
+                                        Height="16" 
+                                        Source="/AssemblyInformation;component/Images/Abstract.Icon.png" 
+                                        ToolTip="Abstract" 
+                                        VerticalAlignment="Center" 
+                                        Visibility="{Binding 
+                                            Path=IsAbstract, 
+                                            Mode=OneWay, 
+                                            Converter={StaticResource BooleanToVisibility}
+                                        }"
+                                    />
+                                    <Image 
+                                        Height="16" 
+                                        Source="/AssemblyInformation;component/Images/Static.Icon.png" 
+                                        ToolTip="Static" 
+                                        VerticalAlignment="Center" 
+                                        Visibility="{Binding 
+                                            Path=IsStatic, 
+                                            Mode=OneWay, 
+                                            Converter={StaticResource BooleanToVisibility}
+                                        }"
+                                    />
+                                </StackPanel>
+                            </TreeViewItem.Header>
+                            <TreeViewItem 
+                                Header="Ancestors"
+                                ItemsSource="{Binding 
+                                    Path=Ancestors, 
+                                    Mode=OneWay
+                                }"
+                            >
+                                <TreeViewItem.ItemTemplate>
+                                    <DataTemplate>
+                                        <TreeViewItem 
+                                            Header="{Binding 
+                                                Path=Key, 
+                                                Mode=OneWay
+                                            }"
+                                            ItemsSource="{Binding 
+                                                Path=Value, 
+                                                Mode=OneWay
+                                            }"
+                                        />
+                                    </DataTemplate>
+                                </TreeViewItem.ItemTemplate>
+                            </TreeViewItem>
+                            <TreeViewItem 
+                                Header="Constructors"
+                                ItemsSource="{Binding 
+                                    Path=Constructors, 
+                                    Mode=OneWay
+                                }"
+                            />
+                            <TreeViewItem 
+                                Header="Events" 
+                                ItemsSource="{Binding 
+                                    Path=Events, 
+                                    Mode=OneWay
+                                }"
+                            />
+                            <TreeViewItem 
+                                Header="Methods" 
+                                ItemsSource="{Binding 
+                                    Path=Methods, 
+                                    Mode=OneWay
+                                }"
+                            />
+                            <TreeViewItem 
+                                Header="Properties" 
+                                ItemsSource="{Binding 
+                                    Path=Properties, 
+                                    Mode=OneWay
+                                }"
+                            />
+                        </TreeViewItem>
+                    </DataTemplate>
+                </TreeView.Resources>
+            </TreeView>
         </DockPanel>
 
 

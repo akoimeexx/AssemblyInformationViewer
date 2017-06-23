@@ -49,7 +49,7 @@ namespace com.akoimeexx.utilities.assemblyinformation.Dialogs {
                     ));
                 InitializeComponent();
                 ViewModel.AssemblyDetails = 
-                    ReflectionAnalyzer.ExamineAssembly(assemblyPath);
+                        ReflectionAnalyzer.ExamineAssembly(assemblyPath);
                 DataContext = ViewModel;
             } catch (Exception e) {
                 MessageBox.Show(
