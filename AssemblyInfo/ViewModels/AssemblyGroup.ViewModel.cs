@@ -59,12 +59,18 @@ namespace com.akoimeexx.utilities.assemblyinformation.ViewModels {
                 InitialPath = Environment.CurrentDirectory,
                 RestoreDirectory = true
             };
+        public Models.AssemblyInfo SelectedItem {
+            get { return _selectedItem; }
+            set { Set(ref _selectedItem, value); }
+        } private Models.AssemblyInfo _selectedItem = 
+            default(Models.AssemblyInfo);
 #endregion Properties
     }
     public partial class AssemblyGroupViewModel {
 #region Commands
         public ICommand DetailsDialog {
-            get { return 
+            get {
+                return 
                     _detailsDialog ?? 
                     (_detailsDialog = new CommandBase(
                         p => {
@@ -90,6 +96,49 @@ namespace com.akoimeexx.utilities.assemblyinformation.ViewModels {
             }
             set { Set(ref _detailsDialog, value); }
         } private ICommand _detailsDialog = default(ICommand);
+        public ICommand GenerateReport {
+            get {
+                return
+                    _generateReport ??
+                    (_generateReport = new CommandBase(
+                        p => {
+                            return true;
+                        }, 
+                        a => {
+                            long totalSize = default(long);
+                            int duplicateFiles = 
+                                Assemblies.Cast<Models.AssemblyInfo>().Count() - 
+                                Assemblies.Cast<Models.AssemblyInfo>().Distinct(
+                                    Comparer<Models.AssemblyInfo>.Create(
+                                        (c1, c2) => {
+                                            return String.Compare(
+                                                c1.Name, c2.Name
+                                            );
+                                        }
+                                    ) as IEqualityComparer<Models.AssemblyInfo>
+                                ).Count();
+                            foreach (Models.AssemblyInfo m in Assemblies) {
+                                totalSize += new FileInfo(
+                                    Path.Combine(m.Path, m.Name)
+                                ).Length;
+                            }
+                            System.Windows.MessageBox.Show(
+                                String.Format(
+                                    String.Join(
+                                        Environment.NewLine, 
+                                        "Total File Size: {0}", 
+                                        "Duplicate Files: {1}"
+                                    ), 
+                                    totalSize.FileSize(), 
+                                    duplicateFiles
+                                ), 
+                                "Assembly Group Report"
+                            );
+                        }
+                    ));
+            }
+            set { Set(ref _generateReport, value); }
+        } private ICommand _generateReport = default(ICommand);
         public ICommand OpenAssemblyGroup {
             get {
                 return
@@ -183,12 +232,7 @@ namespace com.akoimeexx.utilities.assemblyinformation.ViewModels {
         }
         public string ToJson() {
             string s = default(string);
-            if (
-                Assemblies != null && 
-                ((CollectionView)Assemblies)
-                    .SourceCollection
-                    .GetType() == typeof(Models.AssemblyInfo)
-            ) {
+            if (Assemblies != null) {
                 List<string> assemblyLines = new List<string>();
 
                 foreach (
@@ -252,6 +296,7 @@ namespace com.akoimeexx.utilities.assemblyinformation.ViewModels {
                 Assemblies = CollectionViewSource.GetDefaultView(e);
             }
         }
+        ~AssemblyGroupViewModel() { }
 #endregion Constructors & Destructor
     }
 }

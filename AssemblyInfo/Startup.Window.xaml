@@ -3,7 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-    xmlns:local="clr-namespace:com.akoimeexx.utilities.assemblyinformation" 
+    
+    xmlns:behaviors="clr-namespace:com.akoimeexx.utilities.assemblyinformation.Behaviors"  
     
     mc:Ignorable="d" 
 
@@ -186,6 +187,11 @@
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <UniformGrid 
+                            behaviors:DropBehavior.DropCommand="{Binding 
+                                Path=DroppedPath, 
+                                Mode=OneWay
+                            }"
+                            AllowDrop="True" 
                             Margin="5,10" 
                             Rows="1" 
                         />
@@ -197,6 +203,20 @@
                             Margin="5,0" 
                             MinWidth="192" 
                         >
+                            <DockPanel.Resources>
+                                <ContextMenu x:Key="itemContextMenu">
+                                    <MenuItem 
+                                        Header="Add Assembly Group" 
+                                    />
+                                    <MenuItem 
+                                        Header="Remove Assembly Group" 
+                                    />
+                                    <Separator />
+                                    <MenuItem 
+                                        Header="Export Assembly Group" 
+                                    />
+                                </ContextMenu>
+                            </DockPanel.Resources>
                             <DockPanel DockPanel.Dock="Top">
                                 <Button 
                                     Command="{Binding 
@@ -212,9 +232,17 @@
                                         Width="16" 
                                     />
                                 </Button>
+                                <Button DockPanel.Dock="Right" 
+                                    Command="{Binding 
+                                        Path=GenerateReport, 
+                                        Mode=OneWay
+                                    }" 
+                                    HorizontalAlignment="Right" 
+                                    Padding="5,0"
+                                >Report</Button>
                                 <TextBox 
                                     IsReadOnly="True" 
-                                    Margin="10,0,0,0" 
+                                    Margin="10,0" 
                                     Text="{Binding 
                                         Path=AssemblyPath.FullName, 
                                         Mode=OneWay, 
@@ -225,9 +253,6 @@
                             </DockPanel>
                             <DataGrid x:Name="assemblyList" DockPanel.Dock="Bottom" 
                                 AllowDrop="True" 
-                                AlternatingRowBackground="{StaticResource 
-                                    {x:Static SystemColors.ControlBrushKey}
-                                }"
                                 AutoGenerateColumns="False" 
                                 Background="{StaticResource 
                                     {x:Static SystemColors.WindowBrushKey}
@@ -242,6 +267,10 @@
                                 }"
                                 Margin="0,10,0,0" 
                                 VerticalScrollBarVisibility="Visible" 
+                                SelectedItem="{Binding 
+                                    Path=SelectedItem, 
+                                    Mode=TwoWay
+                                }"
                                 SelectionMode="Single" 
                                 SelectionUnit="FullRow" 
                                 Tag="{Binding 
@@ -250,10 +279,68 @@
                                 }" 
                                 VerticalGridLinesBrush="Transparent" 
                             >
+                                <!--AlternatingRowBackground="{StaticResource 
+                                    {x:Static SystemColors.ControlBrushKey}
+                                }"-->
                                 <DataGrid.Resources>
                                     <Style TargetType="{x:Type DataGridColumnHeader}">
                                         <Setter Property="HorizontalContentAlignment" 
                                             Value="Stretch" 
+                                        />
+                                    </Style>
+                                    <Style TargetType="{x:Type DataGridRow}">
+                                        <Style.Triggers>
+                                            <Trigger 
+                                                Property="DataGridRow.IsSelected" 
+                                                Value="true" 
+                                            >
+                                                <!--<Setter 
+                                                    Property="AlternatingRowBackground" 
+                                                    Value="{StaticResource 
+                                                        {x:Static 
+                                                            SystemColors.HighlightBrushKey
+                                                        }
+                                                    }"
+                                                />-->
+                                                <Setter 
+                                                    Property="Background" 
+                                                    Value="{StaticResource 
+                                                        {x:Static 
+                                                            SystemColors.HighlightBrushKey
+                                                        }
+                                                    }"
+                                                />
+                                                <Setter 
+                                                    Property="Foreground" 
+                                                    Value="{StaticResource 
+                                                        {x:Static 
+                                                            SystemColors.HighlightTextBrushKey
+                                                        }
+                                                    }"
+                                                />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                    <Style TargetType="{x:Type DataGridCell}">
+                                        <Setter 
+                                            Property="Background" 
+                                            Value="{Binding 
+                                                Path=Background, 
+                                                RelativeSource={
+                                                    RelativeSource FindAncestor, 
+                                                        AncestorType={x:Type DataGridRow}
+                                                }
+                                            }"
+                                        />
+                                        <Setter 
+                                            Property="Foreground" 
+                                            Value="{Binding 
+                                                Path=Foreground, 
+                                                RelativeSource={
+                                                    RelativeSource FindAncestor, 
+                                                        AncestorType={x:Type DataGridRow}
+                                                }
+                                            }"
                                         />
                                     </Style>
                                 </DataGrid.Resources>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,22 +21,25 @@ namespace com.akoimeexx.utilities.assemblyinformation.ViewModels {
             }
         } private AssemblyAnalysis _assemblyDetails =
             default(AssemblyAnalysis);
-        public IList InformationCollection {
+        public ICollectionView InformationCollection {
             get {
-                return new CompositeCollection() {
-                    new CollectionContainer() {
-                        Collection = AssemblyDetails.Classes
-                    },
-                    new CollectionContainer() {
-                        Collection = AssemblyDetails.Enums
-                    },
-                    new CollectionContainer() {
-                        Collection = AssemblyDetails.Interfaces
-                    },
-                    new CollectionContainer() {
-                        Collection = AssemblyDetails.Structs
+                CollectionViewSource c = new CollectionViewSource() {
+                    Source = new CompositeCollection() {
+                        new CollectionContainer() {
+                            Collection = AssemblyDetails.Classes
+                        },
+                        new CollectionContainer() {
+                            Collection = AssemblyDetails.Enums
+                        },
+                        new CollectionContainer() {
+                            Collection = AssemblyDetails.Interfaces
+                        },
+                        new CollectionContainer() {
+                            Collection = AssemblyDetails.Structs
+                        }
                     }
                 };
+                return c.View;
             }
         }
 #endregion Properties

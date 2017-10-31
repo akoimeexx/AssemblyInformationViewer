@@ -10,6 +10,7 @@ namespace UnitTests.AssemblyInformation {
     [TestClass]
     public class StartupViewModelTests {
         [TestMethod]
+        [TestCategory("Startup Window"), TestCategory("Commands")]
         public void CommandsNotNull() {
             ai.ViewModels.StartupViewModel vm = 
                 new ai.ViewModels.StartupViewModel();
@@ -67,6 +68,7 @@ namespace UnitTests.AssemblyInformation {
             );
         }
         [TestMethod]
+        [TestCategory("Startup Window"), TestCategory("Commands")]
         public void AddAssemblyGroup() {
             ai.ViewModels.StartupViewModel vm = 
                 new ai.ViewModels.StartupViewModel();
@@ -77,6 +79,7 @@ namespace UnitTests.AssemblyInformation {
             Assert.AreEqual(i+1, vm.AssemblyGroups.Count);
         }
         [TestMethod]
+        [TestCategory("Startup Window"), TestCategory("Commands")]
         public void RemoveAssemblyGroup() {
             ai.ViewModels.StartupViewModel vm = 
                 new ai.ViewModels.StartupViewModel();

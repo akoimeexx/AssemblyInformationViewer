@@ -99,6 +99,89 @@ namespace com.akoimeexx.utilities.assemblyinformation.ViewModels {
             }
             set { Set(ref _discrepancyHighlighting, value); }
         } private ICommand _discrepancyHighlighting = default(ICommand);
+        public ICommand DroppedPath {
+            get {
+                return
+                    _droppedPath ??
+                    (_droppedPath = new CommandBase(
+                        p => {
+                            return true;
+                        }, 
+                        a => {
+                            var d = a as System.Windows.IDataObject;
+                            if (d != null) try {
+                                string[] paths = default(string[]);
+                                if(
+                                    !d.GetDataPresent(
+                                        System.Windows.DataFormats.FileDrop
+                                    ) || (paths = (string[])d.GetData(
+                                        System.Windows.DataFormats.FileDrop)
+                                    ).Length == 0
+                                ) throw new ArgumentException(
+                                    "Unable to read data"
+                                );
+                                int loadedGroups = 0;
+                                List<Models.AssemblyInfo> fileGroup = 
+                                    new List<Models.AssemblyInfo>();
+
+                                foreach (string path in paths) {
+                                    if (new FileInfo(path).IsDirectory()) {
+                                        AssemblyGroups.Add(
+                                            new AssemblyGroupViewModel(path)
+                                        );
+                                        loadedGroups++;
+                                    } else if (File.Exists(path)) {
+                                        fileGroup.Add(
+                                            new Models.AssemblyInfo() {
+                                                Name = Path.GetFileName(path), 
+                                                Path = Path.GetDirectoryName(path), 
+                                                Version = new FileInfo(path).GetFileVersion()
+                                            }
+                                        );
+                                    }
+                                }
+                                if (fileGroup.Count > 0) {
+                                    var asmGroup = AssemblyGroups.FirstOrDefault(
+                                        _ => {
+                                            return (
+                                                String.IsNullOrEmpty(_.AssemblyPath?.Name)
+                                            );
+                                        }
+                                    );
+                                    if (asmGroup != null) {
+                                        fileGroup.AddRange(
+                                            (IEnumerable<Models.AssemblyInfo>)asmGroup.Assemblies.SourceCollection
+                                        );
+                                        asmGroup.Assemblies = CollectionViewSource.GetDefaultView(
+                                            fileGroup
+                                        );
+                                    } else {
+                                        AssemblyGroups.Add(
+                                            new AssemblyGroupViewModel(fileGroup)
+                                        );
+                                    }
+                                    Messages.Push(
+                                        String.Format(
+                                            "Total files loaded: {0}", 
+                                            fileGroup.Count
+                                        )
+                                    );
+                                }
+                                if (loadedGroups > 0) Messages.Push(
+                                    String.Format(
+                                        "Total directories loaded: {0}", 
+                                        loadedGroups
+                                    )
+                                );
+
+                            } catch(Exception e) {
+                                Messages.Push(e.Message);
+                            } finally { }
+                        }
+                    ));
+            }
+            set { Set(ref _droppedPath, value); }
+        } private ICommand _droppedPath = default(ICommand);
         public ICommand ExitApplication {
             get {
                 return
@@ -174,23 +257,20 @@ namespace com.akoimeexx.utilities.assemblyinformation.ViewModels {
                     (_matchSelection = new CommandBase(
                         p => {
                             return (
-                                p.GetType() == typeof(Models.AssemblyInfo) && 
+                                p?.GetType() == typeof(Models.AssemblyInfo) && 
                                 IsSelectionMatchingEnabled
                             );
                         },
                         a => {
+                            string assemblyName = ((Models.AssemblyInfo)a).Name;
                             foreach (var group in AssemblyGroups) {
                                 foreach (var asm in group.Assemblies) {
                                     if (
-                                        ((Models.AssemblyInfo)asm).Name == ((Models.AssemblyInfo)a).Name
+                                        !group.SelectedItem.Equals((Models.AssemblyInfo)asm) &&
+                                        ((Models.AssemblyInfo)asm).Name == 
+                                        ((Models.AssemblyInfo)a).Name
                                     ) {
-                                        System.Windows.MessageBox.Show(
-                                            "Selection matching not implemented", 
-                                            "", 
-                                            System.Windows.MessageBoxButton.OK, 
-                                            System.Windows.MessageBoxImage.Exclamation
-                                        );
-                                        //((CollectionView)asm).
+                                        group.SelectedItem = (Models.AssemblyInfo)asm;
                                         break;
                                     }
                                 }
@@ -201,7 +281,7 @@ namespace com.akoimeexx.utilities.assemblyinformation.ViewModels {
             set { Set(ref _matchSelection, value); }
         } private ICommand _matchSelection = default(ICommand);
         public ICommand RemoveAssemblyGroup {
-            get {
+            get {   
                 return 
                     _removeAssemblyGroup ?? 
                     (_removeAssemblyGroup = new CommandBase(
@@ -223,21 +303,6 @@ namespace com.akoimeexx.utilities.assemblyinformation.ViewModels {
     }
     public partial class StartupViewModel {
 #region Methods
-        private bool exportToJson(string path) {
-            bool b = false;
-            try {
-                if (b = ExportDialog.ShowDialog() == true) {
-
-                }
-            } catch (Exception e) {
-                Messages.Push(
-                    e.Message
-                );
-            } finally {
-                b = File.Exists(path);
-            }
-            return b;
-        }
 #endregion Methods
     }
     public partial class StartupViewModel {

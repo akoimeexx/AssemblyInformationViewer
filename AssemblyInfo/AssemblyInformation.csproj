@@ -60,6 +60,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Behaviors\Drop.Behavior.cs" />
+    <Compile Include="Numerics.Extensions.cs" />
     <Compile Include="ReflectionAnalyzer.Class.cs" />
     <Compile Include="Dialogs\BrowseDirectoryDialog.Microsoft.Win32.Class.cs" />
     <Compile Include="Dialogs\Details.Window.xaml.cs">
